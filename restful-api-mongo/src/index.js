@@ -2,9 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+require('dotenv').config(); 
 
 const tasksRoutes = require('./routes/tasks.routes');
 const middleware = require('./middleware/errors.middleware');
+const userRoutes = require('./routes/user.routes');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,10 +14,8 @@ const logLevel = process.env.LOG_LEVEL || 'dev';
 
 // Make connection to the db
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/tododb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(process.env.MONGODB_URI, {
+}).then(() => console.log('Connected to MongoDB Atlas!')).catch(err => console.error('Could not connect to MongoDB Atlas...', err));
 
 // Store the instance of db so we can listen to events.
 const db = mongoose.connection;
@@ -39,6 +39,7 @@ app.use(bodyParser.json());
 
 // Handle routes for tasks.
 app.use('/tasks', tasksRoutes);
+app.use('/user', userRoutes);
 
 // Handle 404 requests
 app.use(middleware.error404);

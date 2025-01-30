@@ -1,54 +1,53 @@
 const Tasks = require('../models/tasks.model');
 
-exports.getAllTasks = function(req, res) {
-  Tasks.find({}, function(err, data) {
-    if (err) {
-      res.send(err);
-    }
-    res.json(data);
-  });
+exports.getAllTasks = async function (req, res) {
+  try {
+    const tasks = await Tasks.find({});
+    res.json(tasks);
+  } catch (err) {
+    res.send(err);
+  }
 };
 
-exports.getTask = function(req, res) {
-  Tasks.findById(req.params.taskId, function(err, data) {
-    if (err) {
-      res.send(err);
-    }
-    res.json(data);
-  });
+exports.getTask = async function (req, res) {
+  try {
+    const task = await Tasks.findById(req.params.taskId);
+    res.json(task);
+  } catch (err) {
+    res.send(err);
+  }
 };
 
-exports.createTask = function(req, res) {
+exports.createTask = async function (req, res) {
   const newTask = new Tasks({
-    name: req.body.name
+    name: req.body.name,
   });
-  newTask.save(function(err, data) {
-    if (err) {
-      res.send(err);
-    }
-    res.json(data);
-  });
+  try {
+    const savedTask = await newTask.save();
+    res.json(savedTask);
+  } catch (err) {
+    res.send(err);
+  }
 };
 
-exports.updateTask = function(req, res) {
-  Tasks.findOneAndUpdate(
-    { _id: req.params.taskId },
-    req.body,
-    { new: true },
-    function(err, data) {
-      if (err) {
-        res.send(err);
-      }
-      res.json(data);
-    }
-  );
+exports.updateTask = async function (req, res) {
+  try {
+    const updatedTask = await Tasks.findOneAndUpdate(
+      { _id: req.params.taskId },
+      req.body,
+      { new: true }
+    );
+    res.json(updatedTask);
+  } catch (err) {
+    res.send(err);
+  }
 };
 
-exports.deleteTask = function(req, res) {
-  Tasks.deleteOne({ _id: req.params.taskId }, function(err) {
-    if (err) {
-      res.send(err);
-    }
+exports.deleteTask = async function (req, res) {
+  try {
+    await Tasks.deleteOne({ _id: req.params.taskId });
     res.json({ msg: 'Deleted successfully.' });
-  });
+  } catch (err) {
+    res.send(err);
+  }
 };
