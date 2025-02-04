@@ -1,30 +1,19 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const db = require('./db-config');
 require('dotenv').config(); 
 
 const tasksRoutes = require('./routes/tasks.routes');
 const middleware = require('./middleware/errors.middleware');
 const userRoutes = require('./routes/user.routes');
+const authRoutes = require('./routes/auth.routes');
 
 const app = express();
 const port = process.env.PORT || 3000;
 const logLevel = process.env.LOG_LEVEL || 'dev';
 
-// Make connection to the db
-mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI, {
-}).then(() => console.log('Connected to MongoDB Atlas!')).catch(err => console.error('Could not connect to MongoDB Atlas...', err));
 
-// Store the instance of db so we can listen to events.
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'connection error:'));
-
-db.once('open', function() {
-  console.log('Connection Successful!');
-});
 
 // Middleware - logs server requests to console
 app.use(logger(logLevel));
@@ -38,8 +27,9 @@ app.use(bodyParser.json());
 // ************************************
 
 // Handle routes for tasks.
-app.use('/tasks', tasksRoutes);
-app.use('/user', userRoutes);
+app.use('/api/tasks', tasksRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
 
 // Handle 404 requests
 app.use(middleware.error404);
