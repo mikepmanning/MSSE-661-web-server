@@ -2,7 +2,8 @@
   "name": "example",
   "version": "1.0.0",
   "description": "Example test app",
-  "main": "index.ts",
+  "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "serve": "nodemon ./src"
   },
@@ -10,9 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
-    "morgan": "^1.9.1",
-    "mongoose": "^5.7.11"
+    "mongoose": "^5.7.11",
+    "morgan": "^1.9.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
