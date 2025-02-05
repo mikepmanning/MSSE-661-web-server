@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const db = require('./db-config');
@@ -14,6 +15,10 @@ const port = process.env.PORT || 3000;
 const logLevel = process.env.LOG_LEVEL || 'dev';
 
 
+app.use(cors({ 
+  origin: 'http://localhost:3000',
+  credentials: true 
+}));
 
 // Middleware - logs server requests to console
 app.use(logger(logLevel));
