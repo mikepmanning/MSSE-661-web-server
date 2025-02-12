@@ -20,7 +20,7 @@ const TasksSchema = new Schema({
         enum: ['pending', 'completed']
       }
     ],
-    default: ['pending']
+    default: 'pending'
   }
 });
 

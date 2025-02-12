@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "start": "nodemon ./src",
-    "test": "NODE_ENV=test mocha --require esm tests/*.test.js"
+    "test": "cross-env NODE_ENV=test mocha tests/**/*.test.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "-": "^0.0.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -23,7 +24,7 @@
   "devDependencies": {
     "chai": "^5.1.2",
     "chai-http": "^5.1.1",
-    "esm": "^3.2.25",
+    "cross-env": "^7.0.3",
     "mocha": "^11.1.0",
     "nodemon": "^2.0.2"
   }
