@@ -1,23 +1,36 @@
-require('dotenv').config(); 
-const mongoose = require('mongoose');
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import * as path from 'path'; 
+import { fileURLToPath } from 'url'; 
 
 
-// Make connection to the db
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
+
+dotenv.config({ path: path.join(__dirname, '../.env') });
+
+
 const uri = process.env.MONGODB_URI;
-mongoose.Promise = global.Promise;
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => console.log('Connected to MongoDB Atlas!')).catch(err => console.error('Could not connect to MongoDB Atlas...', err));
+const options = {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  replicaSet: 'atlas-efjsiq-shard-0',
+  authSource: 'admin',
+  retryWrites: true,
+  ssl: true,
+};
 
-// Store the instance of db so we can listen to events.
+
+mongoose.connect(uri, options)
+  .then(() => console.log('Connected to MongoDB Atlas!'))
+  .catch(err => console.error('Could not connect to MongoDB Atlas...', err));
+
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-db.once('open', function() {
+db.once('open', () => {
   console.log('Connection Successful!');
 });
 
-module.exports = { mongoose, db: mongoose.connection };
-
+export { mongoose, db }; 

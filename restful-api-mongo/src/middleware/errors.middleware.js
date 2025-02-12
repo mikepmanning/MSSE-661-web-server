@@ -3,26 +3,26 @@
 // ************************************
 
 /**
- * Handle req that would produce a 404 status code and respons accordingly.
+ * Handle req that would produce a 404 status code and respond accordingly.
  */
-exports.error404 = function (req, res, next) {
-  res.send({ message: 'Not Found', status: 404 });
+export const error404 = (req, res, next) => {
+  res.status(404).json({ message: 'Not Found' }); 
 };
 
 /**
- * Handle req that would produce a 500 status code and respons accordingly.
+ * Handle req that would produce a 500 status code and respond accordingly.
  */
-exports.error500 = function (error, req, res, next) {
-  res.status(error.status || 500);
-  res.json({
+export const error500 = (error, req, res, next) => {
+  const statusCode = error.status || 500;
+  res.status(statusCode).json({
     error: {
       message: error.message,
     },
   });
 };
 
-exports.logger = function (port) {
-  return function () {
+export const logger = (port) => {
+  return () => {
     console.log(`Running on port: ${port}...`);
   };
 };

@@ -1,53 +1,62 @@
-const Tasks = require('../models/tasks.model');
+import Tasks from '../models/tasks.model.js';
 
-exports.getAllTasks = async function (req, res) {
+export const getAllTasks = async (req, res) => {
   try {
     const tasks = await Tasks.find({});
     res.json(tasks);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err); 
   }
 };
 
-exports.getTask = async function (req, res) {
+export const getTask = async (req, res) => {
   try {
     const task = await Tasks.findById(req.params.taskId);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' }); 
+    }
     res.json(task);
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 };
 
-exports.createTask = async function (req, res) {
+export const createTask = async (req, res) => {
   const newTask = new Tasks({
     name: req.body.name,
   });
   try {
     const savedTask = await newTask.save();
-    res.json(savedTask);
+    res.status(201).json(savedTask); 
   } catch (err) {
-    res.send(err);
+    res.status(400).send(err); 
   }
 };
 
-exports.updateTask = async function (req, res) {
+export const updateTask = async (req, res) => {
   try {
     const updatedTask = await Tasks.findOneAndUpdate(
       { _id: req.params.taskId },
       req.body,
-      { new: true }
+      { new: true } 
     );
+    if (!updatedTask) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
     res.json(updatedTask);
   } catch (err) {
-    res.send(err);
+    res.status(400).send(err);
   }
 };
 
-exports.deleteTask = async function (req, res) {
+export const deleteTask = async (req, res) => {
   try {
-    await Tasks.deleteOne({ _id: req.params.taskId });
-    res.json({ msg: 'Deleted successfully.' });
+    const deletedTask = await Tasks.deleteOne({ _id: req.params.taskId });
+     if (deletedTask.deletedCount === 0) {
+        return res.status(404).json({ message: 'Task not found' });
+    }
+    res.status(204).send();
   } catch (err) {
-    res.send(err);
+    res.status(500).send(err);
   }
 };
