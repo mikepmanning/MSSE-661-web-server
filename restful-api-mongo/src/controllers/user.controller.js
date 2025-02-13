@@ -34,7 +34,8 @@ export const getAllUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.UserId);
+    console.log(req.params);
+    const user = await User.findById(req.params.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' }); 
     }
@@ -102,11 +103,11 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
   try {
-    const deletedUser = await User.deleteOne({ _id: req.params.UserId });
+    const deletedUser = await User.deleteOne({ _id: req.params.userId });
      if (deletedUser.deletedCount === 0) {
         return res.status(404).json({ message: 'User not found' });
     }
-    res.status(204).send(); // 204 No Content
+    res.status(204).send();
   } catch (err) {
     if (err.name === 'CastError') {
         return res.status(400).json({ message: 'Invalid User ID' });

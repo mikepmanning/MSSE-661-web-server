@@ -21,6 +21,7 @@ dotenv.config({ path: path.join(__dirname, '../.env') });
 const app = express();
 const port = process.env.PORT || 3000;
 const logLevel = process.env.LOG_LEVEL || 'dev';
+const env = process.env.NODE_ENV;
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -28,7 +29,9 @@ app.use(cors({
 }));
 
 // Middleware - logs server requests to console
-app.use(logger(logLevel));
+// if (env !== 'test') {
+  app.use(logger(logLevel));
+// }
 
 // Middleware - parses incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.urlencoded({ extended: false }));

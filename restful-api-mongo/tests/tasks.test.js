@@ -1,8 +1,4 @@
-import {expect, use} from 'chai';  
-import chaiHttp from 'chai-http';
-
-const chai = use(chaiHttp);
-const request = chai.request.execute;
+import { expect, request } from './test-utils.js';
 
 const server = 'http://localhost:3001';
 
@@ -49,13 +45,14 @@ describe('Tasks API Service', function () {
 
         id = res.body._id;
     });
-    it('should Delete a single task', async () => { 
+    
+  it('should Delete a single task', async () => { 
 
-      let res = await request(server).delete(`/api/tasks/${id}`);
+    let res = await request(server).delete(`/api/tasks/${id}`);
 
-      expect(res.status).to.be.eql(204);
+    expect(res.status).to.be.eql(204);
 
-      res = await request(server).get(`/api/tasks/${id}`);
-      expect(res.status).to.be.eql(404);
+    res = await request(server).get(`/api/tasks/${id}`);
+    expect(res.status).to.be.eql(404);
   });
 });
