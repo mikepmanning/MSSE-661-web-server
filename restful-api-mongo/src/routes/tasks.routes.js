@@ -1,7 +1,9 @@
-const controllers = require('../controllers/tasks.controller');
-const express = require('express');
+import express from 'express';
+import * as controllers from '../controllers/tasks.controller.js';
+import verifyToken from '../middleware/auth.middleware.js';
 
 const tasksRoutes = express.Router();
+
 /**
  * Express routes for Tasks.
  *
@@ -9,16 +11,18 @@ const tasksRoutes = express.Router();
  */
 
 /**
- * Routes for all tasks. Evaluates to `/tasks/`.
+ * Routes for all tasks. Evaluates to `/api/tasks/`.  <- Added /api
  */
-tasksRoutes.get('/', controllers.getAllTasks).post('/', controllers.createTask);
+tasksRoutes.route('/')
+  .get(verifyToken, controllers.getAllTasks)
+  .post(verifyToken, controllers.createTask);
 
 /**
- * Routes for a task by id. Evalutes to `/tasks/:taskId`.
+ * Routes for a task by id. Evalutes to `/api/tasks/:taskId`. <- Added /api
  */
-tasksRoutes
-  .get('/:taskId', controllers.getTask)
-  .post('/:taskId', controllers.updateTask)
-  .delete('/:taskId', controllers.deleteTask);
+tasksRoutes.route('/:taskId')
+  .get(verifyToken, controllers.getTask)
+  .put(verifyToken, controllers.updateTask)  // Changed post to put for updating
+  .delete(verifyToken, controllers.deleteTask);
 
-  module.exports = tasksRoutes;
+export default tasksRoutes;

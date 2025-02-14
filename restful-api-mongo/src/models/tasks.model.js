@@ -1,8 +1,7 @@
-// Require Mongoose
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Define a schema
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 // Create a new Schema for our collection
 const TasksSchema = new Schema({
@@ -21,9 +20,11 @@ const TasksSchema = new Schema({
         enum: ['pending', 'completed']
       }
     ],
-    default: ['pending']
+    default: 'pending'
   }
 });
 
+TasksSchema.index({ name: 1 });
+
 // Expose the collections functions for use in our controller
-module.exports = mongoose.model('Tasks', TasksSchema);
+export default mongoose.model('Tasks', TasksSchema);

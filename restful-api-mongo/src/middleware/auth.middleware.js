@@ -1,18 +1,22 @@
-const jwt = require('jsonwebtoken');
-const jwtconfig = require('../jwt-config');
+import jwt from 'jsonwebtoken';
+import * as jwtconfig from '../jwt-config.js';
 
-module.exports = function(req, res, next) {
-    const token = req.headers['auth-token'];
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  
+  const token = authHeader.split(' ')[1]; 
 
-    if (!token) {
-        res.status(401).send({success: 'false', message:'Access Denied'});
-    }
+  if (!token) {
+    return res.status(401).send({ success: false, message: 'Access Denied' })
+  };
 
-    try {
-        const verified = jwt.verify(token, jwtconfig.secret);
-        req.user = verified;
-        next();
-    } catch (err) {
-        res.status(400).send({success: 'false', message:' Invalid Authentication Token'});
-    }
-}
+  try {
+    const verified = jwt.verify(token, jwtconfig.secret);
+    req.user = verified;
+    next();
+  } catch (err) {
+    return res.status(400).send({ success: false, message: 'Invalid Authentication Token' });
+  }
+};
+
+export default verifyToken;
