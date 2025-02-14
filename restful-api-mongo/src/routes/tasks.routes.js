@@ -1,5 +1,6 @@
 import express from 'express';
 import * as controllers from '../controllers/tasks.controller.js';
+import verifyToken from '../middleware/auth.middleware.js';
 
 const tasksRoutes = express.Router();
 
@@ -13,15 +14,15 @@ const tasksRoutes = express.Router();
  * Routes for all tasks. Evaluates to `/api/tasks/`.  <- Added /api
  */
 tasksRoutes.route('/')
-  .get(controllers.getAllTasks)
-  .post(controllers.createTask);
+  .get(verifyToken, controllers.getAllTasks)
+  .post(verifyToken, controllers.createTask);
 
 /**
  * Routes for a task by id. Evalutes to `/api/tasks/:taskId`. <- Added /api
  */
 tasksRoutes.route('/:taskId')
-  .get(controllers.getTask)
-  .put(controllers.updateTask)  // Changed post to put for updating
-  .delete(controllers.deleteTask);
+  .get(verifyToken, controllers.getTask)
+  .put(verifyToken, controllers.updateTask)  // Changed post to put for updating
+  .delete(verifyToken, controllers.deleteTask);
 
 export default tasksRoutes;

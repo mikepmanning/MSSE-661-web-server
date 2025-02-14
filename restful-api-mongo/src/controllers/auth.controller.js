@@ -30,6 +30,7 @@ export const login = async (req, res) => {
     );
 
     res.setHeader('auth-token', token); 
+    res.header('Access-Control-Expose-Headers', 'auth-token');
     res.status(200).json({ success: true, message: 'Login Successful'}); 
 
   } catch (error) {
