@@ -14,13 +14,14 @@ const TasksSchema = new Schema({
     default: Date.now
   },
   status: {
-    type: [
-      {
-        type: String,
-        enum: ['pending', 'completed']
-      }
-    ],
+    type: String,
+    enum: ['pending', 'completed'],
     default: 'pending'
+  },
+  userId: { 
+    type: Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true
   }
 });
 
