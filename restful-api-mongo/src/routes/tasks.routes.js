@@ -14,7 +14,7 @@ const tasksRoutes = express.Router();
  * Routes for all tasks. Evaluates to `/api/tasks/`.  <- Added /api
  */
 tasksRoutes.route('/')
-  .get(verifyToken, controllers.getAllTasks)
+  .get(verifyToken, controllers.getAllTasksByUser)
   .post(verifyToken, controllers.createTask);
 
 /**

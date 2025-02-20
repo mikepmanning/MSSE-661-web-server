@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import { mongoose, db } from './db-config.js';;
+import { mongoose, db } from './utils/db-config.js';;
 import dotenv from 'dotenv';
 import * as path from 'path';
 import { fileURLToPath } from 'url'; 

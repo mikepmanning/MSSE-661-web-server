@@ -1,7 +1,7 @@
 import User from '../models/user.model.js'; 
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import * as jwtconfig from '../jwt-config.js'; 
+import * as jwtconfig from '../utils/jwt-config.js'; 
 
 const getUserWithoutPassword = (user) => {
   if (!user) {
