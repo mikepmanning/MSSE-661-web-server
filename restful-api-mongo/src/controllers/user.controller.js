@@ -2,6 +2,10 @@ import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as jwtconfig from '../utils/jwt-config.js'; 
+import mongoose from 'mongoose';
+
+
+mongoose.set('useFindAndModify', false); 
 
 const getUserWithoutPassword = (user) => {
   if (!user) {
@@ -75,16 +79,35 @@ export const createUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  console.log("update user on backend entered");
   try {
-    if (req.body.password) {
-      req.body.password = bcrypt.hashSync(req.body.password); 
+    const user = await User.findById(req.body.id);
+    if (!user) {
+      console.log("No found user");
+      return res.status(404).json({error: "User not found"});
+    }
+    console.log(user);
+
+    if (req.body.oldPassword) {
+      const passwordMatch = await bcrypt.compare(req.body.oldPassword, user.password);
+      if (!passwordMatch) {
+        return res.status(401).json({error: 'Invalid old password'});
+      }
     }
 
+    if (req.body.newPassword) {
+      const passwordHash = bcrypt.hashSync(req.body.newPassword);
+      req.body.password = passwordHash; //switching to password so we can update correctly after encoding the new password
+    }
+
+    
     const updatedUser = await User.findOneAndUpdate(
-      { _id: req.params.UserId },
+      { _id: req.params.userId },
       req.body,
       { new: true } 
     );
+
+    console.log(updatedUser);
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
@@ -119,7 +142,8 @@ export const deleteUser = async (req, res) => {
 
 
 export const getMe = async (req, res) => {
-  const token = req.headers['auth-token'];
+  const authHeader = req.headers['authorization'];
+  const token = authHeader.split(' ')[1]; 
 
   if (!token) {
     return res.status(401).send({ success: false, message: 'No token provided' }); // return
